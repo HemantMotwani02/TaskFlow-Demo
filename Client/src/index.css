@@ -1,0 +1,656 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    /* Scale to 80% of normal size for better screen usage without vertical issues */
+    font-size: 12px; /* Down from default 16px */
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 transition-colors duration-200;
+  }
+  
+  /* Dark mode base styles */
+  .dark body {
+    @apply bg-gray-900 text-gray-100 !important;
+  }
+  
+  /* Light mode base styles */
+  .light body {
+    @apply bg-gray-50 text-gray-900 !important;
+  }
+  
+  /* Ensure dark mode is applied */
+  .dark {
+    color-scheme: dark;
+  }
+  
+  .light {
+    color-scheme: light;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* Button styles */
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  .dark .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 focus:ring-blue-400;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+  
+  .dark .btn-secondary {
+    @apply bg-gray-700 hover:bg-gray-600 text-gray-200 focus:ring-gray-400;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2;
+  }
+  
+  .dark .btn-success {
+    @apply bg-green-500 hover:bg-green-600 focus:ring-green-400;
+  }
+  
+  .btn-warning {
+    @apply bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2;
+  }
+  
+  .dark .btn-warning {
+    @apply bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+  
+  .dark .btn-danger {
+    @apply bg-red-500 hover:bg-red-600 focus:ring-red-400;
+  }
+  
+  /* Input styles */
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 bg-white text-gray-900;
+  }
+  
+  .dark .input-field {
+    @apply border-gray-600 bg-gray-800 text-gray-100 focus:ring-blue-400;
+  }
+  
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 transition-colors duration-200;
+  }
+  
+  .dark .card {
+    @apply bg-gray-800 border-gray-700 !important;
+  }
+  
+  /* Text colors */
+  .text-primary {
+    @apply text-blue-600;
+  }
+  
+  .dark .text-primary {
+    @apply text-blue-400;
+  }
+  
+  .text-success {
+    @apply text-green-600;
+  }
+  
+  .dark .text-success {
+    @apply text-green-400;
+  }
+  
+  .text-warning {
+    @apply text-yellow-600;
+  }
+  
+  .dark .text-warning {
+    @apply text-yellow-400;
+  }
+  
+  .text-danger {
+    @apply text-red-600;
+  }
+  
+  .dark .text-danger {
+    @apply text-red-400;
+  }
+  
+  /* Background colors */
+  .bg-primary {
+    @apply bg-blue-600;
+  }
+  
+  .dark .bg-primary {
+    @apply bg-blue-500;
+  }
+  
+  .bg-success {
+    @apply bg-green-600;
+  }
+  
+  .dark .bg-success {
+    @apply bg-green-500;
+  }
+  
+  .bg-warning {
+    @apply bg-yellow-600;
+  }
+  
+  .dark .bg-warning {
+    @apply bg-yellow-500;
+  }
+  
+  .bg-danger {
+    @apply bg-red-600;
+  }
+  
+  .dark .bg-danger {
+    @apply bg-red-500;
+  }
+  
+  /* Additional dark mode overrides */
+  .dark .bg-white {
+    @apply bg-gray-800 !important;
+  }
+  
+  .dark .border-gray-200 {
+    @apply border-gray-700 !important;
+  }
+  
+  .dark .text-gray-900 {
+    @apply text-white !important;
+  }
+  
+  .dark .text-gray-700 {
+    @apply text-gray-300 !important;
+  }
+  
+  .dark .text-gray-600 {
+    @apply text-gray-400 !important;
+  }
+  
+  .dark .text-gray-500 {
+    @apply text-gray-400 !important;
+  }
+  
+  .dark .hover\:bg-gray-50:hover {
+    @apply hover:bg-gray-700 !important;
+  }
+  
+  .dark .hover\:text-gray-900:hover {
+    @apply hover:text-white !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(203 213 225);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(148 163 184);
+  }
+}
+
+/* Dark mode styles */
+.dark {
+  color-scheme: dark;
+}
+
+/* Dropdown styling improvements */
+select option {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+.dark select option {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+/* Ensure dropdown text is visible */
+select {
+  color: inherit !important;
+}
+
+/* Focus states for better accessibility */
+select:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Hover states for dropdown options */
+select option:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.dark select option:hover {
+  background-color: #4b5563 !important;
+}
+
+/* Auth form specific styles */
+.auth-form-container {
+  position: relative;
+  z-index: 10;
+}
+
+.auth-form-card {
+  position: relative;
+  z-index: 20;
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Ensure input fields have proper visibility */
+.auth-form-container input,
+.auth-form-container select {
+  background-color: white !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+.auth-form-container input:focus,
+.auth-form-container select:focus {
+  background-color: white !important;
+  color: #111827 !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+}
+
+.auth-form-container input::placeholder {
+  color: #6b7280 !important;
+}
+
+/* Dark mode overrides for auth forms */
+.dark .auth-form-card {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark .auth-form-container input,
+.dark .auth-form-container select {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .auth-form-container input:focus,
+.dark .auth-form-container select:focus {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #818cf8 !important;
+}
+
+.dark .auth-form-container input::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Ensure text inside auth forms is visible */
+.auth-form-container h2,
+.auth-form-container p,
+.auth-form-container span,
+.auth-form-container label,
+.auth-form-container a {
+  color: inherit !important;
+}
+
+/* Dark mode text visibility ONLY for auth form content */
+.dark .auth-form-container h2 {
+  color: white !important;
+}
+
+.dark .auth-form-container p {
+  color: #d1d5db !important;
+}
+
+.dark .auth-form-container span {
+  color: #9ca3af !important;
+}
+
+.dark .auth-form-container label {
+  color: #f3f4f6 !important;
+}
+
+/* Force black text ONLY for auth page footer links */
+.auth-form-container + div p {
+  color: #000000 !important;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Auth pages specific background styles */
+.auth-form-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Clean professional background - ONLY for auth pages */
+.auth-form-container::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: 
+    linear-gradient(45deg, rgba(148, 163, 184, 0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(148, 163, 184, 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(148, 163, 184, 0.03) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(148, 163, 184, 0.03) 75%);
+  background-size: 60px 60px;
+  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Subtle geometric accents - ONLY for auth pages */
+.auth-form-container::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(107, 114, 128, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(99, 102, 241, 0.02) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Modern Full-Screen Meeting Room Styles */
+.meeting-room-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  background: #000000 !important;
+  overflow: hidden !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+/* Ensure meeting room takes full screen */
+.meeting-room-container {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #000000 !important;
+  overflow: hidden !important;
+}
+
+/* Hide scrollbars for full-screen experience */
+.meeting-room-container * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.meeting-room-container *::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Ensure video elements take full space */
+.meeting-video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Modern Meeting control buttons */
+.meeting-control-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform-origin: center !important;
+}
+
+.meeting-control-btn:hover {
+  transform: scale(1.1) !important;
+}
+
+.meeting-control-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Modern Meeting sidebar styles */
+.meeting-sidebar {
+  background: rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Modern Meeting chat styles */
+.meeting-chat {
+  background: rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Modern Meeting top bar */
+.meeting-top-bar {
+  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modern Meeting bottom controls */
+.meeting-bottom-controls {
+  background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ensure no margins or padding interfere with full screen */
+.meeting-room-container * {
+  box-sizing: border-box !important;
+}
+
+/* Force full screen for meeting room */
+body.meeting-active {
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #000000 !important;
+}
+
+html.meeting-active {
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #000000 !important;
+}
+
+/* Modern video grid animations */
+.meeting-video-grid {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.meeting-video-tile {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform-origin: center !important;
+}
+
+.meeting-video-tile:hover {
+  transform: scale(1.02) !important;
+  z-index: 10 !important;
+}
+
+/* Screen sharing highlight */
+.meeting-screen-share-active {
+  box-shadow: 0 0 0 4px #3b82f6, 0 0 20px rgba(59, 130, 246, 0.5) !important;
+  animation: screen-share-pulse 2s infinite !important;
+}
+
+@keyframes screen-share-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px #3b82f6, 0 0 20px rgba(59, 130, 246, 0.5); }
+  50% { box-shadow: 0 0 0 6px #3b82f6, 0 0 30px rgba(59, 130, 246, 0.8); }
+}
+
+/* Participant status indicators */
+.meeting-status-indicator {
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.meeting-status-indicator:hover {
+  transform: scale(1.1) !important;
+}
+
+/* Modern button hover effects */
+.meeting-btn-modern {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.meeting-btn-modern::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent) !important;
+  transition: left 0.5s ease !important;
+}
+
+.meeting-btn-modern:hover::before {
+  left: 100% !important;
+}
+
+/* Smooth sidebar transitions */
+.meeting-sidebar-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Modern chat message animations */
+.meeting-chat-message {
+  animation: slideInMessage 0.3s ease-out !important;
+}
+
+@keyframes slideInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Participant join/leave animations */
+.meeting-participant-join {
+  animation: participantJoin 0.5s ease-out !important;
+}
+
+.meeting-participant-leave {
+  animation: participantLeave 0.5s ease-in !important;
+}
+
+@keyframes participantJoin {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes participantLeave {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+}
+
+/* Modern loading states */
+.meeting-loading {
+  animation: pulse 2s infinite !important;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Enhanced focus states for accessibility */
+.meeting-focus-visible:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Modern glassmorphism effects */
+.meeting-glass {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Smooth transitions for all interactive elements */
+.meeting-interactive {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.meeting-interactive:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Modern shadow effects */
+.meeting-shadow-modern {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.meeting-shadow-modern:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 6px 15px rgba(0, 0, 0, 0.3) !important;
+}
