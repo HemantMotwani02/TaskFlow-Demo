@@ -294,7 +294,7 @@ describe('Project Controller - Unit Tests', () => {
         success: true,
         data: {
           analytics: expect.objectContaining({
-            projectId: '1',
+            projectId: 1,
             projectName: 'Test Project',
             totalTasks: 3,
             completedTasks: 1,

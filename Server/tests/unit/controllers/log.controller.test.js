@@ -54,7 +54,7 @@ describe('Log Controller - Unit Tests', () => {
     });
 
     it('should filter logs by task', async () => {
-      req.query = { taskId: 1, page: 1, limit: 10 };
+      req.query = { taskId: '1', page: 1, limit: 10 };
 
       Log.findAndCountAll = jest.fn().mockResolvedValue({
         count: 1,

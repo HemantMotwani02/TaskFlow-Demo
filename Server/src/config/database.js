@@ -29,8 +29,8 @@ const config = {
       typeCast: true,
       // Disable prepared statements for problematic queries
       prepare: false,
-      // Set timezone to Indian Standard Time
-      timezone: 'Asia/Kolkata'
+      // Set timezone to IST (+05:30)
+      timezone: '+05:30'
     }
   },
   test: {
@@ -58,7 +58,7 @@ const config = {
       dateStrings: true,
       typeCast: true,
       prepare: false,
-      timezone: 'Asia/Kolkata'
+      timezone: '+05:30'
     }
   },
   production: {
@@ -90,7 +90,7 @@ const config = {
       dateStrings: true,
       typeCast: true,
       prepare: false,
-      timezone: 'Asia/Kolkata'
+      timezone: '+05:30'
     }
   }
 };
@@ -112,16 +112,6 @@ const sequelize = new Sequelize(
     dialectOptions: dbConfig.dialectOptions
   }
 );
-
-// Test connection
-sequelize
-  .authenticate()
-  .then(() => {
-    logger.info('Database connection has been established successfully.');
-  })
-  .catch((err) => {
-    logger.error('Unable to connect to the database:', err);
-  });
 
 module.exports = {
   sequelize,
