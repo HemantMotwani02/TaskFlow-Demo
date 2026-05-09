@@ -2,9 +2,9 @@ name: Node CI Pipeline
 
 on:
   push:
-    branches: 
-     - main
-     - feature-permission-page
+    branches:
+      - main
+      - feature-permission-page
 
 jobs:
   build-test:
@@ -19,22 +19,27 @@ jobs:
         with:
           node-version: 18
 
+      # 📦 Install dependencies
       - name: Install Dependencies
         run: npm install
+        working-directory: ./Server
 
-      # 🧪 Run unit + integration tests
+      # 🧪 Run tests
       - name: Run Tests
         run: npm test
+        working-directory: ./Server
 
-      # 📊 Run coverage (important for demo)
+      # 📊 Coverage report
       - name: Generate Coverage Report
         run: npm run test:coverage
+        working-directory: ./Server
 
       # 🚀 Start server in background
       - name: Start Server
         run: |
           npm start &
-          sleep 5
+          sleep 10
+        working-directory: ./Server
 
       # ⚡ Install JMeter
       - name: Install JMeter
@@ -43,7 +48,9 @@ jobs:
       # 📈 Run load test
       - name: Run Load Test
         run: |
-          jmeter -n -t performance/test-plan.jmx -l results.jtl
+          jmeter -n \
+            -t Server/performance/test-plan.jmx \
+            -l results.jtl
 
       # 📤 Upload artifacts
       - name: Upload Test Results
@@ -52,4 +59,4 @@ jobs:
           name: test-results
           path: |
             results.jtl
-            coverage/
+            Server/coverage/
