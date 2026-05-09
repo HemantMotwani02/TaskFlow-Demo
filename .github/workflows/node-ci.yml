@@ -2,7 +2,9 @@ name: Node CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+     - main
+     - feature-permission-page
 
 jobs:
   build-test:
