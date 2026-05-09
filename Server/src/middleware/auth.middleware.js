@@ -13,7 +13,10 @@ const authenticateToken = async (req, res, next) => {
       throw new AuthenticationError('Access token required');
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production'
+    );
     
     // Get user from database - handle both userId and user_id
     const userId = decoded.userId || decoded.user_id;
@@ -179,7 +182,10 @@ const optionalAuth = async (req, res, next) => {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production'
+      );
       const userId = decoded.userId || decoded.user_id;
       const user = await User.findByPk(userId, {
         attributes: { exclude: ['password'] }

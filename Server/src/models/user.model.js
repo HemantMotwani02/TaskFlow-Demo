@@ -114,6 +114,10 @@ User.init({
   created_by: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  permission_group_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 }, {
   sequelize,

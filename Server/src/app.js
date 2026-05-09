@@ -17,6 +17,7 @@ const assignmentRoutes = require('./routes/assignment.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const notificationRoutes = require('./routes/notification.routes');
 const meetingRoutes = require('./routes/meeting.routes');
+const permissionRoutes = require('./routes/permission.routes');
 
 // Import middleware
 const { authenticateToken } = require('./middleware/auth.middleware');
@@ -331,6 +332,7 @@ app.use('/api/assignments', assignmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/meetings', meetingRoutes);
+app.use('/api/permissions', permissionRoutes);
 
 // Legacy endpoint support for old frontend URLs
 app.get('/project-details-members/:projectId', async (req, res) => {

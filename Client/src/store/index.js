@@ -560,6 +560,123 @@ export const useUserStore = create(
   )
 );
 
+// Permission Store
+export const usePermissionStore = create(
+  devtools(
+    (set, get) => ({
+      groups: [],
+      definitions: [],
+      isLoading: false,
+      error: null,
+      pagination: {
+        page: 1,
+        limit: 10,
+        total: 0,
+        pages: 0
+      },
+
+      fetchDefinitions: async () => {
+        set({ isLoading: true, error: null });
+        const result = await apiCall('/permissions/definitions');
+
+        if (result.success && result.data.success) {
+          set({
+            definitions: result.data.data?.definitions || [],
+            isLoading: false
+          });
+        } else {
+          set({
+            error: result.error || 'Failed to fetch permission definitions',
+            isLoading: false
+          });
+        }
+      },
+
+      fetchGroups: async (page = 1, limit = 10, search = '') => {
+        set({ isLoading: true, error: null });
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit)
+        });
+        if (search?.trim()) params.set('q', search.trim());
+
+        const result = await apiCall(`/permissions/groups?${params.toString()}`);
+        if (result.success && result.data.success) {
+          set({
+            groups: result.data.data?.groups || [],
+            pagination: result.data.data?.pagination || { page, limit, total: 0, pages: 0 },
+            isLoading: false
+          });
+        } else {
+          set({
+            error: result.error || 'Failed to fetch permission groups',
+            isLoading: false
+          });
+        }
+      },
+
+      fetchAssignableGroups: async () => {
+        const result = await apiCall('/permissions/groups?page=1&limit=100');
+        if (result.success && result.data.success) {
+          return { success: true, groups: result.data.data?.groups || [] };
+        }
+        return { success: false, groups: [], error: result.error || 'Failed to fetch groups' };
+      },
+
+      createGroup: async (payload) => {
+        const result = await apiCall('/permissions/groups', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          requiredRoles: [ROLES.ADMIN],
+          meta: { successMessage: 'Permission group created' }
+        });
+        if (result.success && result.data.success) {
+          return { success: true };
+        }
+        return { success: false, error: result.error || 'Failed to create group' };
+      },
+
+      updateGroup: async (groupId, payload) => {
+        const result = await apiCall(`/permissions/groups/${groupId}`, {
+          method: 'PUT',
+          body: JSON.stringify(payload),
+          requiredRoles: [ROLES.ADMIN],
+          meta: { successMessage: 'Permission group updated' }
+        });
+        if (result.success && result.data.success) {
+          return { success: true };
+        }
+        return { success: false, error: result.error || 'Failed to update group' };
+      },
+
+      deleteGroup: async (groupId) => {
+        const result = await apiCall(`/permissions/groups/${groupId}`, {
+          method: 'DELETE',
+          requiredRoles: [ROLES.ADMIN],
+          meta: { successMessage: 'Permission group deleted' }
+        });
+        if (result.success && result.data.success) {
+          return { success: true };
+        }
+        return { success: false, error: result.error || 'Failed to delete group' };
+      },
+
+      setDefaultGroup: async (groupId) => {
+        const result = await apiCall(`/permissions/groups/${groupId}/default`, {
+          method: 'PATCH',
+          requiredRoles: [ROLES.ADMIN],
+          meta: { successMessage: 'Default permission updated' }
+        });
+        if (result.success && result.data.success) {
+          return { success: true };
+        }
+        return { success: false, error: result.error || 'Failed to update default group' };
+      }
+    }),
+    { name: 'permission-store' }
+  )
+);
+
 // Project Store
 export const useProjectStore = create(
   devtools(

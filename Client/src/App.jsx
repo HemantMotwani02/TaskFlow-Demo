@@ -33,6 +33,7 @@ import ProjectDetails from './components/ProjectDetails/ProjectDetails';
 import ProjectReport from './components/ProjectDetails/ProjectReport';
 import NotFound from './components/NotFound';
 import AllNotifications from './components/Notifications/AllNotifications';
+import PermissionGroups from './components/Permissions/PermissionGroups';
 import { ROLES } from './store';
 
 function AppContent() {
@@ -187,6 +188,12 @@ function AppContent() {
             <Route path="/notifications" element={
               <ProtectedRoute>
                 <AllNotifications />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/permissions" element={
+              <ProtectedRoute requiredRoles={[ROLES.ADMIN]}>
+                <PermissionGroups />
               </ProtectedRoute>
             } />
             

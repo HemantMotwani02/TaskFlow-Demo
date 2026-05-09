@@ -16,7 +16,8 @@ import {
   Cog6ToothIcon,
   DocumentTextIcon,
   CheckCircleIcon,
-  CalendarIcon
+  CalendarIcon,
+  KeyIcon
 } from '@heroicons/react/24/outline';
 import ProfileImage from '../ProfileImage/ProfileImage';
 import { useWebSocketNotificationsSimple as useWebSocketNotifications } from '../../hooks/useWebSocketNotificationsSimple';
@@ -108,6 +109,10 @@ const Navigation = () => {
   const filteredMenuItems = (userRole === ROLES.DEVELOPER)
     ? menuItems.filter(mi => mi.path !== '/team')
     : menuItems;
+
+  const withPermissionsMenu = userRole === ROLES.ADMIN
+    ? [...filteredMenuItems, { path: '/permissions', label: 'Permissions', icon: KeyIcon }]
+    : filteredMenuItems;
 
   return (
     <>
@@ -314,7 +319,7 @@ const Navigation = () => {
         <div className="flex flex-col h-full">
           {/* Navigation Menu */}
           <nav className={`flex-1 space-y-2 ${isSidebarMinimized ? 'px-2 py-6' : 'px-6 py-6'}`}>
-            {filteredMenuItems.map((item) => {
+            {withPermissionsMenu.map((item) => {
               const Icon = item.icon;
               return (
                 <Link

@@ -8,6 +8,9 @@ const Log = require('./log.model');
 const Assignment = require('./assignment.model');
 const Notification = require('./notification.model');
 const OTP = require('./otp.model');
+const PermissionDefinition = require('./permissionDefinition.model');
+const PermissionGroup = require('./permissionGroup.model');
+const PermissionGroupItem = require('./permissionGroupItem.model');
 
 // Define associations
 const defineAssociations = () => {
@@ -39,6 +42,10 @@ const defineAssociations = () => {
   User.hasMany(Task, { 
     foreignKey: 'assigned_to', 
     as: 'assignedTasks' 
+  });
+  User.belongsTo(PermissionGroup, {
+    foreignKey: 'permission_group_id',
+    as: 'permissionGroup'
   });
 
   // Project associations
@@ -114,6 +121,29 @@ const defineAssociations = () => {
   Notification.belongsTo(User, { foreignKey: 'actor_id', as: 'actor' });
   Notification.belongsTo(Project, { foreignKey: 'project_id', as: 'project' });
   Notification.belongsTo(Task, { foreignKey: 'task_id', as: 'task' });
+
+  // Permission associations
+  PermissionGroup.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'creator'
+  });
+  PermissionGroup.hasMany(PermissionGroupItem, {
+    foreignKey: 'permission_group_id',
+    as: 'groupItems'
+  });
+
+  PermissionGroupItem.belongsTo(PermissionGroup, {
+    foreignKey: 'permission_group_id',
+    as: 'permissionGroup'
+  });
+  PermissionGroupItem.belongsTo(PermissionDefinition, {
+    foreignKey: 'permission_definition_id',
+    as: 'permissionDefinition'
+  });
+  PermissionDefinition.hasMany(PermissionGroupItem, {
+    foreignKey: 'permission_definition_id',
+    as: 'groupItems'
+  });
 };
 
 // Initialize associations
@@ -127,5 +157,8 @@ module.exports = {
   Log,
   Assignment,
   Notification,
-  OTP
+  OTP,
+  PermissionDefinition,
+  PermissionGroup,
+  PermissionGroupItem
 };

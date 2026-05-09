@@ -1,7 +1,8 @@
-const { User, Project, Task, Assignment } = require('../models');
+const { User, Project, Task, Assignment, PermissionGroup } = require('../models');
 const logger = require('../utils/logger');
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
+const { SYSTEM_GROUPS } = require('../constants/permissions');
 
 /**
  * User Controller
@@ -30,6 +31,13 @@ class UserController {
     const { count, rows: users } = await User.findAndCountAll({
       where,
       attributes: { exclude: ['password'] },
+      include: [
+        {
+          model: PermissionGroup,
+          as: 'permissionGroup',
+          attributes: ['permission_group_id', 'name', 'is_default', 'is_system']
+        }
+      ],
       limit: parseInt(limit),
       offset: parseInt(offset),
       order: [['createdAt', 'DESC']]
@@ -219,7 +227,7 @@ class UserController {
    * @route PUT /api/users/:id
    */
   async updateUser(req, res) {
-    const { name, email, phone, address, role } = req.body;
+    const { name, email, phone, address, role, permission_group_id, isActive } = req.body;
 
     const user = await User.findByPk(req.params.id);
     if (!user) {
@@ -245,7 +253,9 @@ class UserController {
       email,
       phone,
       address,
-      role
+      role,
+      permission_group_id,
+      isActive
     });
 
     logger.info(`User ${user.email} updated by ${req.user.email}`);
@@ -298,7 +308,7 @@ class UserController {
    * @route POST /api/users
    */
   async createUser(req, res) {
-    const { name, email, password, role, phone, address, isActive } = req.body;
+    const { name, email, password, role, phone, address, isActive, permission_group_id } = req.body;
 
     // Check if email already exists
     const existingUser = await User.findOne({ where: { email } });
@@ -313,16 +323,26 @@ class UserController {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    const resolvedRole = role || 'developer';
+    const defaultGroup = await PermissionGroup.findOne({ where: { is_default: true } });
+    const adminGroup = await PermissionGroup.findOne({ where: { name: SYSTEM_GROUPS.ADMIN_FULL_ACCESS } });
+    const resolvedPermissionGroupId = permission_group_id || (
+      resolvedRole === 'admin'
+        ? (adminGroup ? adminGroup.permission_group_id : null)
+        : (defaultGroup ? defaultGroup.permission_group_id : null)
+    );
+
     // Create user
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || 'developer',
+      role: resolvedRole,
       phone,
       address,
       isActive: isActive !== undefined ? isActive : true,
-      created_by: req.user.user_id
+      created_by: req.user.user_id,
+      permission_group_id: resolvedPermissionGroupId
     });
 
     // Remove password from response

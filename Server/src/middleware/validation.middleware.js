@@ -42,7 +42,8 @@ const schemas = {
       role: Joi.string().valid('admin', 'manager', 'developer').default('developer').messages(customMessages),
       phone: Joi.string().max(500).optional().messages(customMessages),
       address: Joi.string().max(500).optional().messages(customMessages),
-      isActive: Joi.boolean().default(true).messages(customMessages)
+      isActive: Joi.boolean().default(true).messages(customMessages),
+      permission_group_id: Joi.number().integer().positive().allow(null).optional().messages(customMessages)
     }),
 
     login: Joi.object({
@@ -56,6 +57,9 @@ const schemas = {
       phone: Joi.string().pattern(/^[\+]?[1-9][\d]{0,15}$/).optional().messages(customMessages),
       address: Joi.string().max(500).optional().messages(customMessages),
       password: Joi.string().min(6).max(100).optional().messages(customMessages),
+      role: Joi.string().valid('admin', 'manager', 'developer').optional().messages(customMessages),
+      permission_group_id: Joi.number().integer().positive().allow(null).optional().messages(customMessages),
+      isActive: Joi.boolean().optional().messages(customMessages),
       confirmPassword: Joi.string().valid(Joi.ref('password')).optional().messages({
         ...customMessages,
         'any.only': 'Passwords do not match'

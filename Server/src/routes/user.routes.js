@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, authorize, checkOwnership } = require('../middleware/auth.middleware');
+const { authenticateToken, authorize } = require('../middleware/auth.middleware');
 const { validateUser } = require('../middleware/validation.middleware');
 const { validateQuery } = require('../middleware/validation.middleware');
 const { asyncHandler } = require('../middleware/error.middleware');
@@ -24,8 +24,8 @@ router.get('/managers/list', authenticateToken, asyncHandler(userController.getM
 // GET /api/users/:id - Get user by ID
 router.get('/:id', authenticateToken, asyncHandler(userController.getUserById.bind(userController)));
 
-// PUT /api/users/:id - Update user
-router.put('/:id', authenticateToken, checkOwnership(require('../models').User), validateUser.update, asyncHandler(userController.updateUser.bind(userController)));
+// PUT /api/users/:id - Update user (admin only)
+router.put('/:id', authenticateToken, authorize('admin'), validateUser.update, asyncHandler(userController.updateUser.bind(userController)));
 
 // DELETE /api/users/:id - Delete user (admin only)
 router.delete('/:id', authenticateToken, authorize('admin'), asyncHandler(userController.deleteUser.bind(userController)));

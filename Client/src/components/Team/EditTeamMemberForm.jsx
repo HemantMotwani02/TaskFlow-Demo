@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useUserStore, ROLES, ROLE_NAMES } from '../../store';
+import { useUserStore, usePermissionStore, useAuthStore, ROLES } from '../../store';
 import { 
   XMarkIcon,
   UserIcon,
@@ -10,12 +10,16 @@ import {
 
 const EditTeamMemberForm = ({ user, onClose, onUserUpdated }) => {
   const { updateUser } = useUserStore();
+  const { user: currentUser } = useAuthStore();
+  const { fetchAssignableGroups } = usePermissionStore();
+  const [permissionGroups, setPermissionGroups] = useState([]);
   
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: '',
-    isActive: true
+    isActive: true,
+    permission_group_id: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -26,10 +30,22 @@ const EditTeamMemberForm = ({ user, onClose, onUserUpdated }) => {
         name: user.name || '',
         email: user.email || '',
         role: user.role?.toString() || '',
-        isActive: user.isActive !== undefined ? user.isActive : true
+        isActive: user.isActive !== undefined ? user.isActive : true,
+        permission_group_id: user.permission_group_id || ''
       });
     }
   }, [user]);
+
+  useEffect(() => {
+    const loadGroups = async () => {
+      if (currentUser?.role !== ROLES.ADMIN) return;
+      const result = await fetchAssignableGroups();
+      if (result.success) {
+        setPermissionGroups(result.groups);
+      }
+    };
+    loadGroups();
+  }, [currentUser?.role, fetchAssignableGroups]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -48,8 +64,9 @@ const EditTeamMemberForm = ({ user, onClose, onUserUpdated }) => {
       const result = await updateUser(user.user_id, {
         name: formData.name,
         email: formData.email,
-        role: parseInt(formData.role),
-        isActive: formData.isActive
+        role: formData.role,
+        isActive: formData.isActive,
+        permission_group_id: formData.permission_group_id ? Number(formData.permission_group_id) : null
       });
 
       if (result.success) {
@@ -173,6 +190,30 @@ const EditTeamMemberForm = ({ user, onClose, onUserUpdated }) => {
               Active users can log in and access the system
             </p>
           </div>
+
+          {currentUser?.role === ROLES.ADMIN && (
+            <div>
+              <label htmlFor="permission_group_id" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                Permission Group
+              </label>
+              <select
+                id="permission_group_id"
+                name="permission_group_id"
+                value={formData.permission_group_id}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              >
+                <option value="">None</option>
+                {permissionGroups
+                  .filter((group) => !(formData.role !== ROLES.ADMIN && group.name === 'ADMIN_FULL_ACCESS'))
+                  .map((group) => (
+                    <option key={group.permission_group_id} value={group.permission_group_id}>
+                      {group.name}{group.is_default ? ' (Default)' : ''}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (

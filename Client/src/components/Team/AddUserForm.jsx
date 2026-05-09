@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useUserStore, ROLES, ROLE_NAMES } from '../../store';
+import React, { useEffect, useState } from 'react';
+import { useUserStore, usePermissionStore, useAuthStore, ROLES } from '../../store';
 import { 
   XMarkIcon,
   UserIcon,
@@ -12,6 +12,9 @@ import {
 
 const AddUserForm = ({ onClose, onUserAdded }) => {
   const { createUser } = useUserStore();
+  const { user } = useAuthStore();
+  const { fetchAssignableGroups } = usePermissionStore();
+  const [permissionGroups, setPermissionGroups] = useState([]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -19,8 +22,20 @@ const AddUserForm = ({ onClose, onUserAdded }) => {
     password: '',
     confirmPassword: '',
     role: ROLES.DEVELOPER,
-    isActive: true
+    isActive: true,
+    permission_group_id: ''
   });
+  useEffect(() => {
+    const loadGroups = async () => {
+      if (user?.role !== ROLES.ADMIN) return;
+      const result = await fetchAssignableGroups();
+      if (result.success) {
+        setPermissionGroups(result.groups);
+      }
+    };
+    loadGroups();
+  }, [user?.role, fetchAssignableGroups]);
+
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -57,6 +72,11 @@ const AddUserForm = ({ onClose, onUserAdded }) => {
       
       // Remove confirmPassword before sending to backend
       const { confirmPassword, ...userData } = formData;
+      if (!userData.permission_group_id) {
+        delete userData.permission_group_id;
+      } else {
+        userData.permission_group_id = Number(userData.permission_group_id);
+      }
       const result = await createUser(userData);
       
       if (result.success) {
@@ -214,6 +234,30 @@ const AddUserForm = ({ onClose, onUserAdded }) => {
               Active Account
             </label>
           </div>
+
+          {user?.role === ROLES.ADMIN && (
+            <div>
+              <label htmlFor="permission_group_id" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                Permission Group
+              </label>
+              <select
+                id="permission_group_id"
+                name="permission_group_id"
+                value={formData.permission_group_id}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Auto assign default</option>
+                {permissionGroups
+                  .filter((group) => !(formData.role !== ROLES.ADMIN && group.name === 'ADMIN_FULL_ACCESS'))
+                  .map((group) => (
+                    <option key={group.permission_group_id} value={group.permission_group_id}>
+                      {group.name}{group.is_default ? ' (Default)' : ''}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (

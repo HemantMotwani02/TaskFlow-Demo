@@ -1,7 +1,8 @@
-const { User } = require('../models');
+const { User, PermissionGroup } = require('../models');
 const logger = require('../utils/logger');
 const path = require('path');
 const fs = require('fs').promises;
+const { SYSTEM_GROUPS } = require('../constants/permissions');
 
 /**
  * Auth Controller
@@ -31,15 +32,22 @@ class AuthController {
       });
     }
 
+    const defaultGroup = await PermissionGroup.findOne({ where: { is_default: true } });
+    const adminGroup = await PermissionGroup.findOne({ where: { name: SYSTEM_GROUPS.ADMIN_FULL_ACCESS } });
+    const resolvedRole = role || 'developer';
+
     // Create user
     const user = await User.create({
       name,
       email,
       password,
-      role,
+      role: resolvedRole,
       phone,
       address,
-      created_by: 1
+      created_by: 1,
+      permission_group_id: resolvedRole === 'admin'
+        ? (adminGroup ? adminGroup.permission_group_id : null)
+        : (defaultGroup ? defaultGroup.permission_group_id : null)
     });
 
     // Generate token
