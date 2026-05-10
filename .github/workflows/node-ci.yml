@@ -19,40 +19,33 @@ jobs:
         with:
           node-version: 18
 
-      # 📦 Install dependencies
       - name: Install Dependencies
         run: npm install
         working-directory: ./Server
 
-      # 🧪 Run tests
       - name: Run Tests
         run: npm test
         working-directory: ./Server
 
-      # 📊 Coverage report
       - name: Generate Coverage Report
         run: npm run test:coverage
         working-directory: ./Server
 
-      # 🚀 Start server in background
       - name: Start Server
         run: |
           npm start &
           sleep 10
         working-directory: ./Server
 
-      # ⚡ Install JMeter
       - name: Install JMeter
         run: sudo apt-get update && sudo apt-get install -y jmeter
 
-      # 📈 Run load test
       - name: Run Load Test
         run: |
           jmeter -n \
             -t Server/performance/test-plan.jmx \
             -l results.jtl
 
-      # 📤 Upload artifacts
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
