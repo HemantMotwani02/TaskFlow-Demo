@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest --silent --detectOpenHandles --forceExit",
     "test:watch": "jest --watch --detectOpenHandles",
-    "test:coverage": "jest --coverage --detectOpenHandles --forceExit",
+    "test:coverage": "jest --coverage --silent --detectOpenHandles --forceExit",
     "test:integration": "jest --config jest.integration.config.js --detectOpenHandles --forceExit",
     "test:e2e": "jest --config jest.e2e.config.js --detectOpenHandles --forceExit",
     "lint": "eslint src/",

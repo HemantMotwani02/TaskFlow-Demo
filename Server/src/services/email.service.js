@@ -7,8 +7,10 @@ class EmailService {
     const apiKey = process.env.RESEND_API_KEY;
     
     if (!apiKey) {
-      logger.warn('⚠️ RESEND_API_KEY not found in environment variables. Email service will not work.');
-      logger.warn('Please set RESEND_API_KEY in your .env file to enable email functionality.');
+      if (process.env.NODE_ENV !== 'test') {
+        logger.warn('⚠️ RESEND_API_KEY not found in environment variables. Email service will not work.');
+        logger.warn('Please set RESEND_API_KEY in your .env file to enable email functionality.');
+      }
       this.resend = null;
     } else {
       this.resend = new Resend(apiKey);
