@@ -71,6 +71,7 @@
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
     "sequelize-cli": "^6.6.2",
+    "sqlite3": "^5.1.7",
     "supertest": "^6.3.4"
   },
   "engines": {
@@ -79,6 +80,9 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/tests/setup.js"
+    ],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/server.js",

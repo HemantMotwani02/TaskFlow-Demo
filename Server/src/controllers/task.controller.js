@@ -16,16 +16,21 @@ class TaskController {
     const { page = 1, limit = 10, status, projectId, search, userId } = req.query;
     const offset = (page - 1) * limit;
 
-    const where = {};
-    if (status) where.status = status;
-    if (projectId) where.project_id = projectId;
-    if (userId) where.created_by = userId;
+    const conditions = [];
+    
+    if (status) conditions.push({ status });
+    if (projectId) conditions.push({ project_id: projectId });
+    if (userId) conditions.push({ created_by: userId });
     if (search) {
-      where[Op.or] = [
-        { task_name: { [Op.like]: `%${search}%` } },
-        { task_details: { [Op.like]: `%${search}%` } }
-      ];
+      conditions.push({
+        [Op.or]: [
+          { task_name: { [Op.like]: `%${search}%` } },
+          { task_details: { [Op.like]: `%${search}%` } }
+        ]
+      });
     }
+    
+    const where = conditions.length > 0 ? { [Op.and]: conditions } : {};
 
     const { count, rows: tasks } = await Task.findAndCountAll({
       where,

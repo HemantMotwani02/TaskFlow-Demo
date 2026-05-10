@@ -1,5 +1,7 @@
 const taskController = require('../../../src/controllers/task.controller');
+const projectController = require('../../../src/controllers/project.controller');
 const { Task, Project, User, Log } = require('../../../src/models');
+const { Op } = require('sequelize');
 
 jest.mock('../../../src/models');
 jest.mock('../../../src/utils/logger');
@@ -64,7 +66,7 @@ describe('Task Controller - Unit Tests', () => {
       await taskController.getAllTasks(req, res);
 
       const callArgs = Task.findAndCountAll.mock.calls[0][0];
-      expect(callArgs.where).toHaveProperty('status', 'completed');
+      expect(callArgs.where[Op.and]).toContainEqual({ status: 'completed' });
     });
   });
 

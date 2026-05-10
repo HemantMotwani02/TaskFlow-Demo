@@ -7,14 +7,6 @@ describe('Project API Integration Tests', () => {
   let authToken;
   let testUser;
 
-  beforeAll(async () => {
-    await sequelize.sync({ force: true });
-  });
-
-  afterAll(async () => {
-    await sequelize.close();
-  });
-
   beforeEach(async () => {
     // Create test user and get auth token
     testUser = await User.create({

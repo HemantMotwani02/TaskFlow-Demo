@@ -90,9 +90,9 @@ const schemas = {
       projectId: Joi.number().integer().positive().required().messages(customMessages),
       task_name: Joi.string().min(3).max(100).required().messages(customMessages),
       task_details: Joi.string().min(10).max(1000).required().messages(customMessages),
-      status: Joi.string().valid('pending', 'in_progress', 'completed', 'cancelled').default('pending').messages(customMessages),
+      status: Joi.string().valid('todo', 'pending', 'in_progress', 'completed', 'cancelled').default('todo').messages(customMessages),
       priority: Joi.string().valid('low', 'medium', 'high', 'urgent').default('medium').messages(customMessages),
-      estimate_time: Joi.string().pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/).required().messages(customMessages),
+      estimate_time: Joi.string().pattern(/^(\d{1,2})(:[0-5][0-9])?(:[0-5][0-9])?$/).allow(null, '').optional().messages(customMessages),
       assigned_to: Joi.number().integer().positive().allow(null).optional().messages(customMessages),
       due_date: Joi.date().allow('').optional().messages(customMessages)
     }),
@@ -156,7 +156,7 @@ const schemas = {
       limit: Joi.number().integer().min(1).max(100).default(10).messages(customMessages),
       sortBy: Joi.string().valid('createdAt', 'updatedAt', 'name', 'status').default('createdAt').messages(customMessages),
       sortOrder: Joi.string().valid('asc', 'desc').default('desc').messages(customMessages)
-    }),
+    }).unknown(true),
 
     search: Joi.object({
       q: Joi.string().min(1).max(100).optional().messages(customMessages),

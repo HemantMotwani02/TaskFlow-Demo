@@ -8,14 +8,6 @@ describe('Task API Integration Tests', () => {
   let testUser;
   let testProject;
 
-  beforeAll(async () => {
-    await sequelize.sync({ force: true });
-  });
-
-  afterAll(async () => {
-    await sequelize.close();
-  });
-
   beforeEach(async () => {
     // Create test user
     testUser = await User.create({

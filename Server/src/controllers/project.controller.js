@@ -16,15 +16,20 @@ class ProjectController {
     const { page = 1, limit = 10, status, managerId, search } = req.query;
     const offset = (page - 1) * limit;
 
-    const where = { deleted_at: null };
-    if (status) where.status = status;
-    if (managerId) where.manager_id = managerId;
+    const conditions = [{ deleted_at: null }];
+    
+    if (status) conditions.push({ status });
+    if (managerId) conditions.push({ manager_id: managerId });
     if (search) {
-      where[Op.or] = [
-        { project_name: { [Op.like]: `%${search}%` } },
-        { project_details: { [Op.like]: `%${search}%` } }
-      ];
+      conditions.push({
+        [Op.or]: [
+          { project_name: { [Op.like]: `%${search}%` } },
+          { project_details: { [Op.like]: `%${search}%` } }
+        ]
+      });
     }
+    
+    const where = conditions.length > 0 ? { [Op.and]: conditions } : {};
 
     const { count, rows: projects } = await Project.findAndCountAll({
       where,
@@ -539,17 +544,24 @@ class ProjectController {
    * @route GET /api/projects/:id/tasks/query
    */
   async searchProjectTasks(req, res) {
-    const { id } = req.params;
-    const { query, status } = req.query;
+    const { id: projectId } = req.params;
+    const { status, userId, search } = req.query;
+    const conditions = [];
     
-    const where = { project_id: id };
-    if (status) where.status = status;
-    if (query) {
-      where[Op.or] = [
-        { task_name: { [Op.like]: `%${query}%` } },
-        { task_details: { [Op.like]: `%${query}%` } }
-      ];
+    if (status) conditions.push({ status });
+    if (projectId) conditions.push({ project_id: projectId });
+    if (userId) conditions.push({ created_by: userId });
+    conditions.push({ deleted_at: null });
+    if (search) {
+      conditions.push({
+        [Op.or]: [
+          { task_name: { [Op.like]: `%${search}%` } },
+          { task_details: { [Op.like]: `%${search}%` } }
+        ]
+      });
     }
+    
+    const where = conditions.length > 0 ? { [Op.and]: conditions } : {};
 
     const tasks = await Task.findAll({
       where,

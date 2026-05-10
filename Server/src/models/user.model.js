@@ -32,14 +32,14 @@ class User extends Model {
   static async findManagers() {
     return this.findAll({ 
       where: { role: 'manager', isActive: true },
-      attributes: ['user_id', 'name', 'email']
+      attributes: ['user_id', 'name', 'email', 'role']
     });
   }
 
   static async findActiveUsers() {
     return this.findAll({ 
       where: { isActive: true },
-      attributes: ['user_id', 'name', 'email', 'role']
+      attributes: ['user_id', 'name', 'email', 'role', 'isActive']
     });
   }
 }
@@ -53,14 +53,14 @@ User.init({
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       len: [2, 100]
     }
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     unique: true,
     validate: {
       isEmail: true
@@ -68,7 +68,7 @@ User.init({
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       len: [6, 255]
     }
@@ -76,7 +76,10 @@ User.init({
   role: {
     type: DataTypes.ENUM('admin', 'manager', 'developer'),
     allowNull: true,
-    defaultValue: 'developer'
+    defaultValue: 'developer',
+    validate: {
+      isIn: [['admin', 'manager', 'developer']]
+    }
   },
   phone: {
     type: DataTypes.STRING,

@@ -9,7 +9,7 @@ describe('User Model', () => {
         name: 'John Doe',
         email: 'john@example.com',
         password: 'password123',
-        role: '3'
+        role: 'developer'
       };
 
       const user = await User.create(userData);
@@ -151,7 +151,7 @@ describe('User Model', () => {
       expect(typeof token).toBe('string');
       
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      expect(decoded.userId).toBe(user.id);
+      expect(decoded.userId).toBe(user.user_id);
       expect(decoded.email).toBe(user.email);
       expect(decoded.role).toBe(user.role);
     });
@@ -171,14 +171,14 @@ describe('User Model', () => {
         name: 'John Doe',
         email: 'john@example.com',
         password: 'password123',
-        role: '2'
+        role: 'manager'
       });
 
       await User.create({
         name: 'Jane Smith',
         email: 'jane@example.com',
         password: 'password123',
-        role: '3'
+        role: 'developer'
       });
     });
 
@@ -196,7 +196,7 @@ describe('User Model', () => {
     it('should find managers', async () => {
       const managers = await User.findManagers();
       expect(managers).toHaveLength(1);
-      expect(managers[0].role).toBe('2');
+      expect(managers[0].role).toBe('manager');
     });
 
     it('should find active users', async () => {
@@ -226,7 +226,7 @@ describe('User Model', () => {
       });
 
       await user.destroy();
-      const foundUser = await User.findByPk(user.id);
+      const foundUser = await User.findByPk(user.user_id);
       expect(foundUser).toBeNull();
     });
 
@@ -237,9 +237,9 @@ describe('User Model', () => {
         password: 'password123'
       });
 
-      const foundUser = await User.findByPk(createdUser.id);
+      const foundUser = await User.findByPk(createdUser.user_id);
       expect(foundUser).toBeTruthy();
-      expect(foundUser.id).toBe(createdUser.id);
+      expect(foundUser.user_id).toBe(createdUser.user_id);
     });
   });
 });

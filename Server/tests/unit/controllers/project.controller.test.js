@@ -1,5 +1,6 @@
 const projectController = require('../../../src/controllers/project.controller');
 const { Project, User, Task, Assignment, Log } = require('../../../src/models');
+const { Op } = require('sequelize');
 
 jest.mock('../../../src/models');
 jest.mock('../../../src/utils/logger');
@@ -64,7 +65,7 @@ describe('Project Controller - Unit Tests', () => {
       await projectController.getAllProjects(req, res);
 
       const callArgs = Project.findAndCountAll.mock.calls[0][0];
-      expect(callArgs.where).toHaveProperty('status', 'active');
+      expect(callArgs.where[Op.and]).toContainEqual({ status: 'active' });
     });
 
     it('should search projects by name or details', async () => {

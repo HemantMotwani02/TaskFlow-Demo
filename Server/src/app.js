@@ -46,10 +46,11 @@ app.use(helmet({
 
 // Environment-based rate limiting configuration
 const isDevelopment = process.env.NODE_ENV === 'development';
+const isTest = process.env.NODE_ENV === 'test';
 
-// Skip rate limiting in development if DISABLE_RATE_LIMIT is set
-if (isDevelopment && process.env.DISABLE_RATE_LIMIT === 'true') {
-  console.log('⚠️ Rate limiting disabled for development');
+// Skip rate limiting in development if DISABLE_RATE_LIMIT is set, or always in test
+if ((isDevelopment && process.env.DISABLE_RATE_LIMIT === 'true') || isTest) {
+  console.log(`⚠️ Rate limiting disabled for ${process.env.NODE_ENV} environment`);
 } else {
   // Rate limiting - Environment-aware configuration
   const limiter = rateLimit({

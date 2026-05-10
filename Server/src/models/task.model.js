@@ -108,7 +108,7 @@ Task.init({
   },
   task_name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       len: [2, 255]
     }
@@ -120,7 +120,7 @@ Task.init({
   status: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: 'pending'
+    defaultValue: 'todo'
   },
   priority: {
     type: DataTypes.STRING,
@@ -129,7 +129,7 @@ Task.init({
   },
   estimate_time: {
     type: DataTypes.TIME,
-    allowNull: false
+    allowNull: true
   },
   dueDate: {
     type: DataTypes.DATE,

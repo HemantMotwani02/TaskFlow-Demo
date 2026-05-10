@@ -7,14 +7,6 @@ describe('User API Integration Tests', () => {
   let authToken;
   let adminUser;
 
-  beforeAll(async () => {
-    await sequelize.sync({ force: true });
-  });
-
-  afterAll(async () => {
-    await sequelize.close();
-  });
-
   beforeEach(async () => {
     // Create admin user
     adminUser = await User.create({

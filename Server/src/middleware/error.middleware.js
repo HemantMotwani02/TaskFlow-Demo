@@ -103,9 +103,10 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Development error response
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     return res.status(error.statusCode).json({
       success: false,
+      message: error.message,
       error: {
         message: error.message,
         statusCode: error.statusCode,
@@ -118,6 +119,7 @@ const errorHandler = (err, req, res, next) => {
   // Production error response
   return res.status(error.statusCode).json({
     success: false,
+    message: error.isOperational ? error.message : 'Something went wrong',
     error: {
       message: error.isOperational ? error.message : 'Something went wrong',
       statusCode: error.statusCode,
