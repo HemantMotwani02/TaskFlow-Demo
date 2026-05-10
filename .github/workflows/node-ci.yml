@@ -53,3 +53,4 @@ jobs:
           path: |
             results.jtl
             Server/coverage/
+            
